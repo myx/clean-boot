@@ -1,0 +1,7 @@
+Name: clean-boot
+Requires: os.java
+Augments: 
+Suggests: 
+Declares: 
+Provides:	lfs.bootstrap \
+			build-task:classpath.java.jar:boot \
