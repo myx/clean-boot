@@ -1,10 +1,7 @@
 /**
  * Created on 25.11.2002
  * 
- * To change this generated comment edit the template variable "filecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of file
- * comments go to Window>Preferences>Java>Code Generation.
- */
+ * myx - barachta */
 package boot.lfs.lfsboot;
 
 import java.io.IOException;
@@ -17,10 +14,7 @@ import boot.Source;
 /**
  * @author myx
  * 
- *         To change this generated comment edit the template variable
- *         "typecomment": Window>Preferences>Java>Templates. To enable and
- *         disable the creation of type comments go to
- *         Window>Preferences>Java>Code Generation.
+ * myx - barachta 
  */
 public class Handler extends URLStreamHandler {
 	/**
