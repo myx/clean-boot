@@ -4,4 +4,5 @@ Augments:
 Suggests: 
 Declares: 
 Provides:	lfs.bootstrap \
+			build-prepare:compile-java \
 			build-task:classpath.java.jar:boot \
