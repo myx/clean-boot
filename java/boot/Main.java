@@ -115,7 +115,7 @@ public final class Main {
 		while (st.hasMoreTokens()) {
 			final String current = st.nextToken();
 			final long value = Long.parseLong( current );
-			result.add( new Long( value ) );
+			result.add( Long.valueOf( value ) );
 		}
 		return result;
 	}
