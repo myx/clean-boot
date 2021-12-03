@@ -1,5 +1,5 @@
 Name: clean-boot
 Suggests: os.java
 Provides:	lfs.bootstrap \
-			build-prepare:compile-java \
+			source-process:compile-java \
 			build-task:classpath.java.jar:boot \
