@@ -12,9 +12,21 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 final class BootRunner extends Thread {
+	
+	private static final Method getMainMethod(final Source source, final ClassLoader bootClassLoader) throws Throwable {
+		
+		final String mainClassName = BootRunner.getMainClass(source);
+		System.out.println("AE Launcher: Main class: " + mainClassName);
+		final Properties properties = BootRunner.getProperties(source, System.getProperties());
+		System.setProperties(properties);
+		System.out.println("AE Launcher: intializing kernel.");
+		System.out.flush();
+		final Class<?> mainClass = Class.forName(mainClassName, true, bootClassLoader);
+		return mainClass.getMethod("main", String[].class);
+	}
 
 	public static String getMainClass(final Source source) throws Throwable {
-
+		
 		final byte[] data = source.get("META-INF/MANIFEST.MF");
 		if (data == null) {
 			return BootRunner.getProperties(source, new Properties()).getProperty("main.class", "Main");
@@ -30,21 +42,9 @@ final class BootRunner extends Thread {
 			: tmp.substring(p1 + 12, p2);
 		return result.trim();
 	}
-	
-	private static final Method getMainMethod(final Source source, final ClassLoader bootClassLoader) throws Throwable {
 
-		final String mainClassName = BootRunner.getMainClass(source);
-		System.out.println("AE Launcher: Main class: " + mainClassName);
-		final Properties properties = BootRunner.getProperties(source, System.getProperties());
-		System.setProperties(properties);
-		System.out.println("AE Launcher: intializing kernel.");
-		System.out.flush();
-		final Class<?> mainClass = Class.forName(mainClassName, true, bootClassLoader);
-		return mainClass.getMethod("main", String[].class);
-	}
-	
 	public static Properties getProperties(final Source source, final Properties parent) throws IOException {
-
+		
 		final Properties result = new Properties(parent);
 		if (parent == System.getProperties()) {
 			result.putAll(parent);
@@ -77,21 +77,21 @@ final class BootRunner extends Thread {
 		}
 		return result;
 	}
-	
-	private final String[] args;
-	
-	private final ClassLoader bootClassLoader;
-	
-	private final File rootPublic;
-	
-	private final File rootProtected;
-	
-	private final File current;
-	
-	private final Source source;
-	
-	BootRunner(final String[] args, final File rootProtected, final File rootPublic) throws Exception {
 
+	private final String[] args;
+
+	private final ClassLoader bootClassLoader;
+
+	private final File rootPublic;
+
+	private final File rootProtected;
+
+	private final File current;
+
+	private final Source source;
+
+	BootRunner(final String[] args, final File rootProtected, final File rootPublic) throws Exception {
+		
 		super((ThreadGroup) null, "Core loader thread");
 		this.args = args;
 		{
@@ -110,11 +110,11 @@ final class BootRunner extends Thread {
 			assert rootPublic.exists() || rootPublic.mkdirs() : "Cannot create directory: path=" + rootPublic.getAbsolutePath();
 			assert rootProtected.isDirectory() : "Root is not a directory: path=" + rootProtected.getAbsolutePath();
 			assert rootPublic.isDirectory() : "Root is not a directory: path=" + rootPublic.getAbsolutePath();
-			
+
 			final File boot = new File(rootPublic, "boot");
 			assert boot.exists() || boot.mkdirs() : "Cannot create directory: path=" + boot.getAbsolutePath();
 			assert boot.isDirectory() : "Boot is not a directory: path=" + boot.getAbsolutePath();
-			
+
 			this.rootProtected = rootProtected;
 			this.rootPublic = rootPublic;
 			final ChooserFilter chooser = new ChooserFilter();
@@ -138,10 +138,10 @@ final class BootRunner extends Thread {
 			this.setContextClassLoader(this.bootClassLoader);
 		}
 	}
-	
+
 	@Override
 	public void run() {
-
+		
 		System.err.println("AE Launcher: boot thread started");
 		try {
 			if (this.bootClassLoader == null) {
@@ -165,7 +165,7 @@ final class BootRunner extends Thread {
 							System.out.flush();
 							for (; !Thread.interrupted();) {
 								try {
-									Thread.sleep(15000L);
+									Thread.sleep(15_000L);
 								} catch (final InterruptedException e) {
 									break;
 								}
@@ -184,7 +184,7 @@ final class BootRunner extends Thread {
 			t.printStackTrace(System.out);
 			System.out.flush();
 			try {
-				Thread.sleep(5000L);
+				Thread.sleep(5_000L);
 			} catch (final InterruptedException e) {
 				// ignore
 			}
